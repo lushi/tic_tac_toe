@@ -1,7 +1,17 @@
 #!/usr/bin/env ruby
-
 #create empty board (array)
 board = Array.new(9)
+
+def draw_board(board)
+  puts "   |   |   "
+	puts " " + (1..3).to_a.map {|i| board[i-1].nil? ? i : board[i-1]}.join(" | ")
+	puts "---|---|---"
+	puts " " + (4..6).to_a.map {|i| board[i-1].nil? ? i : board[i-1]}.join(" | ")
+	puts "---|---|---"
+	puts " " + (7..9).to_a.map {|i| board[i-1].nil? ? i : board[i-1]}.join(" | ")
+	puts "   |   |   "
+end
+
 
 #assign marker to human and computer players 
 marker = {'human' => 'X', 'computer' => 'O'}
@@ -11,13 +21,7 @@ player = {marker['human'] => 'human', marker['computer'] => 'computer'}
 game_end = 0
 until game_end == 1 do
 	#draw board
-	puts "   |   |   "
-	puts " " + (1..3).to_a.map {|i| board[i-1].nil? ? i : board[i-1]}.join(" | ")
-	puts "---|---|---"
-	puts " " + (4..6).to_a.map {|i| board[i-1].nil? ? i : board[i-1]}.join(" | ")
-	puts "---|---|---"
-	puts " " + (7..9).to_a.map {|i| board[i-1].nil? ? i : board[i-1]}.join(" | ")
-	puts "   |   |   "
+  draw_board(board)
 
 	#ask human for move input
 	puts "Select your position: "
@@ -96,11 +100,5 @@ until game_end == 1 do
 	end	
 end
 
-puts "   |   |   "
-	puts " " + (1..3).to_a.map {|i| board[i-1].nil? ? i : board[i-1]}.join(" | ")
-	puts "---|---|---"
-	puts " " + (4..6).to_a.map {|i| board[i-1].nil? ? i : board[i-1]}.join(" | ")
-	puts "---|---|---"
-	puts " " + (7..9).to_a.map {|i| board[i-1].nil? ? i : board[i-1]}.join(" | ")
-	puts "   |   |   "
+draw_board(board)
 
