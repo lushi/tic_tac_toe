@@ -12,25 +12,7 @@ def draw_board(board)
 	puts "   |   |   "
 end
 
-
-#assign marker to human and computer players 
-marker = {'human' => 'X', 'computer' => 'O'}
-player = {marker['human'] => 'human', marker['computer'] => 'computer'}
-
-#declare game_end variable and loop through game until game ends
-game_end = 0
-until game_end == 1 do
-	#draw board
-  draw_board(board)
-
-	#ask human for move input
-	puts "Select your position: "
-	position = gets.chomp.to_i - 1
-
-	#put move on board
-	board[position] = marker['human']
-
-	#check for win
+def check_win(board, player)
 	if !board[0].nil? && board[0] == board[1] && board[1] == board[2] 
 		puts "#{player[board[0]]} wins!"
 		game_end = 1
@@ -55,6 +37,28 @@ until game_end == 1 do
 	else
 		game_end = 0
 	end
+	game_end
+end
+
+#assign marker to human and computer players 
+marker = {'human' => 'X', 'computer' => 'O'}
+player = {marker['human'] => 'human', marker['computer'] => 'computer'}
+
+#declare game_end variable and loop through game until game ends
+game_end = 0
+until game_end == 1 do
+	#draw board
+  draw_board(board)
+
+	#ask human for move input
+	puts "Select your position: "
+	position = gets.chomp.to_i - 1
+
+	#put move on board
+	board[position] = marker['human']
+
+	#check for win
+	game_end = check_win(board, player)
 
 	#computer move, put on board
 	computer_move = 4
@@ -68,36 +72,7 @@ until game_end == 1 do
 	end
 
 	#check for win
-	if !board[0].nil? && board[0] == board[1] && board[1] == board[2] 
-		puts "#{player[board[0]]} wins!"
-		game_end = 1
-	elsif !board[3].nil? && board[3] == board[4] && board[4] == board[5]
-		puts "#{player[board[3]]} wins!"
-		game_end = 1
-	elsif !board[6].nil? && board[6] == board[7] && board[7] == board[8]
-		puts "#{player[board[6]]} wins!"
-		game_end = 1
-	elsif !board[0].nil? && board[0] == board[3] && board[3] == board[6]
-		puts "#{player[board[0]]} wins!"	
-		game_end = 1
-	elsif !board[1].nil? && board[1] == board[4] && board[4] == board[7]
-		puts "#{player[board[1]]} wins!"	
-		game_end = 1
-	elsif !board[2].nil? && board[2] == board[5] && board[5] == board[8]
-		puts "#{player[board[2]]} wins!"	
-		game_end = 1
-	elsif !board[0].nil? && board[0] == board[4] && board[4] == board[8]
-		puts "#{player[board[0]]} wins!"	
-		game_end = 1
-	elsif !board[2].nil? && board[2] == board[4] && board[4] == board[6]
-		puts "#{player[board[2]]} wins!"	
-		game_end = 1
-	elsif board.include? nil
-		game_end = 0
-	else
-		puts "It's a tie."
-		game_end = 1
-	end	
+  game_end = check_win(board, player)
 end
 
 draw_board(board)
