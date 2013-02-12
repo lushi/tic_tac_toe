@@ -4,11 +4,11 @@ board = Array.new(9)
 
 def draw_board(board)
   puts "   |   |   "
-	puts " " + (1..3).to_a.map {|i| board[i-1].nil? ? i : board[i-1]}.join(" | ")
+	puts " " + (1..3).map{|i| board[i-1] || i}.join(" | ")
 	puts "---|---|---"
-	puts " " + (4..6).to_a.map {|i| board[i-1].nil? ? i : board[i-1]}.join(" | ")
+	puts " " + (4..6).map{|i| board[i-1] || i}.join(" | ")
 	puts "---|---|---"
-	puts " " + (7..9).to_a.map {|i| board[i-1].nil? ? i : board[i-1]}.join(" | ")
+	puts " " + (7..9).map{|i| board[i-1] || i}.join(" | ")
 	puts "   |   |   "
 end
 
