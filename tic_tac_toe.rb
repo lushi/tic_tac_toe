@@ -1,6 +1,11 @@
 #!/usr/bin/env ruby
 
 class Board
+  attr_reader :board
+  def initialize
+    @board ||= Array.new(9)
+  end
+
   def play
     while unfinished? do
       draw
@@ -12,10 +17,6 @@ class Board
   end
 
   private
-  def board
-    @board ||= Array.new(9)
-  end
-
   def unfinished?
     state.nil?
   end
