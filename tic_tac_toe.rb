@@ -1,102 +1,90 @@
 #!/usr/bin/env ruby
 
-#create empty board (array)
-board = Array.new(9)
+class Board
+  def play
+    while unfinished? do
+      draw
+      human_turn
+      computer_turn if state.nil?
+    end
+    draw
+    announce!
+  end
 
-#assign marker to human and computer players 
-marker = {'human' => 'X', 'computer' => 'O'}
-player = {marker['human'] => 'human', marker['computer'] => 'computer'}
+  private
+  def board
+    @board ||= Array.new(9)
+  end
 
-#declare game_end variable and loop through game until game ends
-done = false
-until done do
-	#draw board
-	puts "   |   |   "
-	puts " " + (1..3).to_a.map {|i| board[i-1].nil? ? i : board[i-1]}.join(" | ")
-	puts "---|---|---"
-	puts " " + (4..6).to_a.map {|i| board[i-1].nil? ? i : board[i-1]}.join(" | ")
-	puts "---|---|---"
-	puts " " + (7..9).to_a.map {|i| board[i-1].nil? ? i : board[i-1]}.join(" | ")
-	puts "   |   |   "
+  def unfinished?
+    state.nil?
+  end
 
-	#ask human for move input
-	puts "Select your position: "
-	position = gets.chomp.to_i - 1
+  def draw
+    puts "   |   |   "
+    puts " " + (1..3).map {|i| board[i-1] || i}.join(" | ")
+    puts "---|---|---"
+    puts " " + (4..6).map {|i| board[i-1] || i}.join(" | ")
+    puts "---|---|---"
+    puts " " + (7..9).map {|i| board[i-1] || i}.join(" | ")
+    puts "   |   |   "
+  end
 
-	#put move on board
-	board[position] = marker['human']
+  # This is gross, right?
+  # nil (unfished) | "tie" | ["win", who]
+  def state
+    s = nil
+    if !board[0].nil? &&    board[0] == board[1] && board[0] == board[2] 
+      s = ["win", board[0]]
+    elsif !board[0].nil? && board[0] == board[4] && board[0] == board[8] 
+      s = ["win", board[0]]
+    elsif !board[0].nil? && board[0] == board[3] && board[0] == board[6]
+      s = ["win", board[0]]
+    elsif !board[3].nil? && board[3] == board[4] && board[3] == board[5]
+      s = ["win", board[3]]
+    elsif !board[6].nil? && board[6] == board[7] && board[6] == board[8]
+      s = ["win", board[6]]
+    elsif !board[6].nil? && board[6] == board[4] && board[6] == board[2]
+      s = ["win", board[6]]
+    elsif !board[1].nil? && board[1] == board[4] && board[1] == board[7]
+      s = ["win", board[1]]
+    elsif !board[2].nil? && board[2] == board[5] && board[5] == board[8]
+      s = ["win", board[2]]
+    elsif not board.include? nil
+      s = "tie"
+    end
+    s
+  end
 
-	#check for win
-	if !board[0].nil? && board[0] == board[1] && board[1] == board[2] 
-		puts "#{player[board[0]]} wins!"
-		done = true
-	elsif !board[3].nil? && board[3] == board[4] && board[4] == board[5]
-		puts "#{player[board[3]]} wins!"
-		done = true
-	elsif !board[6].nil? && board[6] == board[7] && board[7] == board[8]
-		puts "#{player[board[6]]} wins!"
-		done = true
-	elsif !board[0].nil? && board[0] == board[3] && board[3] == board[6]
-		puts "#{player[board[0]]} wins!"	
-		done = true
-	elsif !board[1].nil? && board[1] == board[4] && board[4] == board[7]
-		puts "#{player[board[1]]} wins!"	
-		done = true
-	elsif !board[2].nil? && board[2] == board[5] && board[5] == board[8]
-		puts "#{player[board[2]]} wins!"	
-		done = true
-	elsif not board.include? nil
-		puts "It's a tie."
-		done = true
-	end
+  def human_turn
+      puts "Select your position: "
+      position = gets.chomp.to_i - 1
+      while board[position] do
+        puts "Nope. Try again: "
+        position = gets.chomp.to_i - 1
+      end
+      board[position] = "X"
+  end
 
-	#computer move, put on board
-	computer_move = 4
-	while board.include? nil do
-		if not board[computer_move].nil?
-			computer_move = rand(9)
-		else
-			board[computer_move] = marker['computer']
-			break
-		end
-	end
+  def computer_turn
+    while board.include? nil do
+      computer_move = rand(9)
+      if board[computer_move]
+        computer_move = rand(9)
+      else
+        board[computer_move] = "O"
+        break
+      end
+    end
+  end
 
-	#check for win
-	if !board[0].nil? && board[0] == board[1] && board[1] == board[2] 
-		puts "#{player[board[0]]} wins!"
-		done = true
-	elsif !board[3].nil? && board[3] == board[4] && board[4] == board[5]
-		puts "#{player[board[3]]} wins!"
-		done = true
-	elsif !board[6].nil? && board[6] == board[7] && board[7] == board[8]
-		puts "#{player[board[6]]} wins!"
-		done = true
-	elsif !board[0].nil? && board[0] == board[3] && board[3] == board[6]
-		puts "#{player[board[0]]} wins!"	
-		done = true
-	elsif !board[1].nil? && board[1] == board[4] && board[4] == board[7]
-		puts "#{player[board[1]]} wins!"	
-		done = true
-	elsif !board[2].nil? && board[2] == board[5] && board[5] == board[8]
-		puts "#{player[board[2]]} wins!"	
-		done = true
-	elsif !board[0].nil? && board[0] == board[4] && board[4] == board[8]
-		puts "#{player[board[0]]} wins!"	
-		done = true
-	elsif !board[2].nil? && board[2] == board[4] && board[4] == board[6]
-		puts "#{player[board[2]]} wins!"	
-		done = true
-	else
-		puts "It's a tie."
-		done = true
-	end	
+  def announce!
+    if state == "tie"
+      puts "You tied!"
+    else
+      puts "#{state[1]} won!"
+    end
+  end
 end
 
-puts "   |   |   "
-	puts " " + (1..3).to_a.map {|i| board[i-1].nil? ? i : board[i-1]}.join(" | ")
-	puts "---|---|---"
-	puts " " + (4..6).to_a.map {|i| board[i-1].nil? ? i : board[i-1]}.join(" | ")
-	puts "---|---|---"
-	puts " " + (7..9).to_a.map {|i| board[i-1].nil? ? i : board[i-1]}.join(" | ")
-	puts "   |   |   "
-
+Board.new.play
