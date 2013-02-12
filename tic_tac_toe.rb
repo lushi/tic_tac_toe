@@ -13,30 +13,33 @@ def draw_board(board)
 end
 
 def check_win(board, player)
-	if !board[0].nil? && board[0] == board[1] && board[1] == board[2] 
-		puts "#{player[board[0]]} wins!"
-		game_end = 1
-	elsif !board[3].nil? && board[3] == board[4] && board[4] == board[5]
-		puts "#{player[board[3]]} wins!"
-		game_end = 1
-	elsif !board[6].nil? && board[6] == board[7] && board[7] == board[8]
-		puts "#{player[board[6]]} wins!"
-		game_end = 1
-	elsif !board[0].nil? && board[0] == board[3] && board[3] == board[6]
-		puts "#{player[board[0]]} wins!"	
-		game_end = 1
-	elsif !board[1].nil? && board[1] == board[4] && board[4] == board[7]
-		puts "#{player[board[1]]} wins!"	
-		game_end = 1
-	elsif !board[2].nil? && board[2] == board[5] && board[5] == board[8]
-		puts "#{player[board[2]]} wins!"	
-		game_end = 1
-	elsif not board.include? nil
+	winning_combos = [
+		[0, 1, 2],
+		[3, 4, 5],
+		[6, 7, 8],
+		[0, 3, 6],
+		[1, 4, 7],
+		[2, 5, 8],
+		[0, 4, 8],
+		[2, 4, 6]
+	]
+	game_end = 0
+
+	winning_combos.each do |w|
+		if !board[w[0]].nil? && board[w[0]] == board[w[1]] && board[w[1]] == board[w[2]]
+			puts "#{player[board[w[0]]]} wins!"
+			game_end = 1
+			break
+		else
+			game_end = 0
+		end
+	end
+	
+	if not board.include? nil
 		puts "It's a tie."
 		game_end = 1
-	else
-		game_end = 0
 	end
+
 	game_end
 end
 
@@ -76,4 +79,3 @@ until game_end == 1 do
 end
 
 draw_board(board)
-
