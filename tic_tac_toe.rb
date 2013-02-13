@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-#create empty board (array)
+
 class TicTacToe
 	def initialize
 		@board ||= Array.new(9)
@@ -58,7 +58,7 @@ class TicTacToe
 	def human_turn
 		puts "Select your position: "
 		position = gets.chomp.to_i - 1
-		while @board[position] do 
+		while @board[position] do
 			puts "Nope. Try again: "
 			position = gets.chomp.to_i - 1
 		end
