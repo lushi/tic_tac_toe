@@ -50,9 +50,8 @@ class TicTacToe
       end
     end
     
-    if not @board.include? nil
-      s = "tie"
-    end
+    s = "tie" if !@board.include? nil && s.nil?
+      
     s
   end
 
