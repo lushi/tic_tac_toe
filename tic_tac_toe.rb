@@ -1,8 +1,7 @@
 #!/usr/bin/env ruby
-
 class TicTacToe
   def initialize
-    @board ||= Array.new(9)
+    @board = Array.new(9)
     @winning_combos = [
       [0, 1, 2],
       [3, 4, 5],
@@ -49,9 +48,9 @@ class TicTacToe
         break
       end
     end
-    
+
     s = "tie" if !@board.include? nil && s.nil?
-      
+
     s
   end
 
@@ -71,16 +70,16 @@ class TicTacToe
     strategic_check("O", 1) if @computer_move.nil?
 
     corner_center_check if @computer_move.nil?
-    
+
     if @computer_move.nil?
-      @computer_move = rand(9) 
+      @computer_move = rand(9)
       until @board[@computer_move].nil? do
         @computer_move = rand(9)
       end
     end
 
     @board[@computer_move] = "O"
-    @computer_move = nil  
+    @computer_move = nil
   end
 
   def strategic_check(piece, frequency)
@@ -93,8 +92,8 @@ class TicTacToe
   end
 
   def corner_center_check #corner spaces + center: [0, 2, 4, 6, 8]
-    [4, 0, 2, 6, 8].each do |n| 
-      if @board[n].nil? 
+    [4, 0, 2, 6, 8].each do |n|
+      if @board[n].nil?
         @computer_move = n
         break
       end
