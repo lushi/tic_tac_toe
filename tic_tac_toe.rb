@@ -59,7 +59,7 @@ class TicTacToe
   def human_turn
     puts "Select your position: "
     position = gets.chomp.to_i - 1
-    while @board[position] do
+    while position < 0 || position > 8 || !@board[position].nil? do
       puts "Nope. Try again: "
       position = gets.chomp.to_i - 1
     end
