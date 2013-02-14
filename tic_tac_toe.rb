@@ -81,10 +81,10 @@ class TicTacToe
 
   def strategic_check(piece, frequency)
     @winning_combos.each do |w|
-        if w.select {|n| @board[n] == piece}.length == frequency
-          w.each { |n| @computer_move = n if @board[n].nil? }
-        end
+      if w.select { |n| @board[n] == piece }.length == frequency
+        @computer_move = w.find { |n| @board[n].nil? }
       end
+    end
     @computer_move
   end
 
