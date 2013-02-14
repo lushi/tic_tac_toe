@@ -69,9 +69,8 @@ class TicTacToe
 
     corner_center_check if @computer_move.nil?
 
-    if @computer_move.nil?
-      @computer_move = rand(9)
-      until @board[@computer_move].nil? do
+    unless @computer_move
+      until @computer_move && @board[@computer_move].nil? do
         @computer_move = rand(9)
       end
     end
