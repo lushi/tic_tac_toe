@@ -49,9 +49,7 @@ class TicTacToe
       end
     end
 
-    s = "tie" if !@board.include? nil && s.nil?
-
-    s
+    s || ("tie" if !@board.include? nil)
   end
 
   def human_turn
