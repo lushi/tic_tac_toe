@@ -90,13 +90,7 @@ class TicTacToe
   end
 
   def corner_center_check #corner spaces + center: [0, 2, 4, 6, 8]
-    [4, 0, 2, 6, 8].each do |n|
-      if @board[n].nil?
-        @computer_move = n
-        break
-      end
-    end
-    @computer_move
+    @computer_move = [4, 0, 2, 6, 8].find { |n| @board[n].nil? }
   end
 
   def announce!
