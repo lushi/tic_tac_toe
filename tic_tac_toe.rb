@@ -43,7 +43,7 @@ class TicTacToe
     s = nil
 
     @winning_combos.each do |w|
-      if !@board[w[0]].nil? && @board[w[0]] == @board[w[1]] && @board[w[1]] == @board[w[2]]
+      if @board[w[0]] && @board[w[0]] == @board[w[1]] && @board[w[1]] == @board[w[2]]
         s = ["win", @board[w[0]]]
         break
       end
@@ -55,7 +55,7 @@ class TicTacToe
   def human_turn
     puts "Select your position: "
     position = gets.chomp.to_i - 1
-    while position < 0 || position > 8 || !@board[position].nil? do
+    while position < 0 || position > 8 || @board[position] do
       puts "Nope. Try again: "
       position = gets.chomp.to_i - 1
     end
