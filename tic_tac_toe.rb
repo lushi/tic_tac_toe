@@ -42,22 +42,20 @@ class TicTacToe
   def state
     s = nil
 
-    @winning_combos.each do |w|
-      if !@board[w[0]].nil? && @board[w[0]] == @board[w[1]] && @board[w[1]] == @board[w[2]]
-        s = ["win", @board[w[0]]]
+    @winning_combos.each do |(x,y,z)|
+      if @board[x] && @board[x] == @board[y] && @board[y] == @board[z]
+        s = ["win", @board[x]]
         break
       end
     end
 
-    s = "tie" if !@board.include? nil && s.nil?
-
-    s
+    s || ("tie" if !@board.include? nil)
   end
 
   def human_turn
     puts "Select your position: "
     position = gets.chomp.to_i - 1
-    while position < 0 || position > 8 || !@board[position].nil? do
+    while position < 0 || position > 8 || @board[position] do
       puts "Nope. Try again: "
       position = gets.chomp.to_i - 1
     end
@@ -71,9 +69,8 @@ class TicTacToe
 
     corner_center_check if @computer_move.nil?
 
-    if @computer_move.nil?
-      @computer_move = rand(9)
-      until @board[@computer_move].nil? do
+    unless @computer_move
+      until @computer_move && @board[@computer_move].nil? do
         @computer_move = rand(9)
       end
     end
@@ -84,21 +81,15 @@ class TicTacToe
 
   def strategic_check(piece, frequency)
     @winning_combos.each do |w|
-        if w.select {|n| @board[n] == piece}.length == frequency
-          w.each { |n| @computer_move = n if @board[n].nil? }
-        end
+      if w.select { |n| @board[n] == piece }.length == frequency
+        @computer_move = w.find { |n| @board[n].nil? }
       end
+    end
     @computer_move
   end
 
   def corner_center_check #corner spaces + center: [0, 2, 4, 6, 8]
-    [4, 0, 2, 6, 8].each do |n|
-      if @board[n].nil?
-        @computer_move = n
-        break
-      end
-    end
-    @computer_move
+    @computer_move = [4, 0, 2, 6, 8].find { |n| @board[n].nil? }
   end
 
   def announce!
