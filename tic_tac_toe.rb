@@ -42,9 +42,9 @@ class TicTacToe
   def state
     s = nil
 
-    @winning_combos.each do |w|
-      if @board[w[0]] && @board[w[0]] == @board[w[1]] && @board[w[1]] == @board[w[2]]
-        s = ["win", @board[w[0]]]
+    @winning_combos.each do |(x,y,z)|
+      if @board[x] && @board[x] == @board[y] && @board[y] == @board[z]
+        s = ["win", @board[x]]
         break
       end
     end
