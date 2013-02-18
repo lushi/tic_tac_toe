@@ -15,17 +15,31 @@ class TicTacToe
   end
 
   def play
-    while unfinished? do
+    until terminal? do
       draw_board
       human_turn
-      computer_turn if state.nil?
+      computer_turn unless terminal?
     end
     announce!
     draw_board
   end
 
-  def unfinished?
-    state.nil?
+  def terminal?
+    if utility == 1 || utility == -1 || utility == 0
+      return true
+    else
+      return false
+    end
+  end
+
+  def utility
+    if WINNING_COMBOS.find { |(x,y,z)| @board[x] == 'X' && @board[x] == @board[y] && @board[y] == @board[z] }
+      return 1
+    elsif WINNING_COMBOS.find { |(x,y,z)| @board[x] == 'O' && @board[x] == @board[y] && @board[y] == @board[z] }
+      return -1
+    elsif !@board.include? nil
+      return 0
+    end
   end
 
   def draw_board
@@ -36,11 +50,6 @@ class TicTacToe
     puts "---|---|---"
     puts " " + (7..9).map{|i| @board[i-1] || i}.join(" | ")
     puts "   |   |   "
-  end
-
-  def state
-    s = WINNING_COMBOS.find { |(x,y,z)| @board[x] && @board[x] == @board[y] && @board[y] == @board[z] }
-    s || ("tie" if !@board.include? nil)
   end
 
   def human_turn
@@ -80,10 +89,13 @@ class TicTacToe
   end
 
   def announce!
-    if state == "tie"
-      puts "You tied!"
+    case utility
+    when utility == 1
+      puts "X won!"
+    when utility == -1
+      puts "O won!"
     else
-      puts "#{@board[state[0]]} won!"
+      puts "It's a tie!"
     end
   end
 end
