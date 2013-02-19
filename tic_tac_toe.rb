@@ -12,32 +12,44 @@ class TicTacToe
     ]
   def initialize
     @board = Array.new(9)
+    @level
   end
 
   def play
-    until terminal? do
+    select_level
+    until terminal?(@board) do
       draw_board
       human_turn
-      computer_turn unless terminal?
+      computer_turn unless terminal?(@board)
     end
     announce!
     draw_board
   end
 
-  def terminal?
-    if utility == 1 || utility == -1 || utility == 0
+  def select_level
+    puts "Select difficulty level: easy / hard"
+    @level = gets.chomp.downcase
+
+    until @level == 'easy' || @level == 'hard'
+      puts "Nope. Try again: "
+      @level = gets.chomp.downcase
+    end
+  end
+
+  def terminal?(state)
+    if utility(state) == 1 || utility(state) == -1 || utility(state) == 0
       return true
     else
       return false
     end
   end
 
-  def utility
-    if WINNING_COMBOS.find { |(x,y,z)| @board[x] == 'X' && @board[x] == @board[y] && @board[y] == @board[z] }
+  def utility(state)
+    if WINNING_COMBOS.find { |(x,y,z)| state[x] == 'X' && state[x] == state[y] && state[y] == state[z] }
       return 1
-    elsif WINNING_COMBOS.find { |(x,y,z)| @board[x] == 'O' && @board[x] == @board[y] && @board[y] == @board[z] }
+    elsif WINNING_COMBOS.find { |(x,y,z)| state[x] == 'O' && state[x] == state[y] && state[y] == state[z] }
       return -1
-    elsif !@board.include? nil
+    elsif !state.include? nil
       return 0
     end
   end
@@ -63,6 +75,10 @@ class TicTacToe
   end
 
   def computer_turn
+    @level == 'easy' ? computer_turn_easy : computer_turn_hard
+  end
+
+  def computer_turn_easy
     computer_move = strategic_check("O", 2, computer_move) ||
       strategic_check("X", 2, computer_move) ||
       strategic_check("O", 1, computer_move) ||
@@ -88,11 +104,53 @@ class TicTacToe
     computer_move = [0, 2, 4, 6, 8].find { |n| @board[n].nil? }
   end
 
+  def computer_turn_hard
+    minimax_decision
+  end
+
+  def minimax_decision
+    v = min_value(@board)
+    a = successors(@board, 'O').find { |(a, s)| max_value(s) == v }
+    @board[a[0]] = 'O'
+  end
+
+  def successors(state, piece)
+    board = state.dup
+    successors = Array.new
+    moves = (0..8).select { |n| n if board[n].nil? }
+    moves.map do |n|
+      board[n] = piece
+      successors << [n, board.dup]
+      board[n] = nil
+    end
+    successors
+  end
+
+  def max_value(state)
+    if terminal?(state)
+      return utility(state)
+    else
+      v = -999
+      v = successors(state, 'X').map { |(a, s)| min_value(s) }.max
+      return v
+    end
+  end
+
+  def min_value(state)
+    if terminal?(state)
+      return utility(state)
+    else
+      v = 999
+      v = successors(state, 'O').map { |(a, s)| max_value(s) }.min
+      return v
+    end
+  end
+
   def announce!
-    case utility
-    when utility == 1
+    case utility(@board)
+    when 1
       puts "X won!"
-    when utility == -1
+    when -1
       puts "O won!"
     else
       puts "It's a tie!"
